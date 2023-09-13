@@ -30,7 +30,10 @@ import { createClient } from "@vercel/edge-config";
 
 ```js
 const edgeConfigClient = createClient(process.env.EDGE_CONFIG);
-const dataAdapter = new EdgeConfigDataAdapter("KEY_FROM_INSTALLATION");
+const dataAdapter = new EdgeConfigDataAdapter({
+  edgeConfigClient: edgeConfigClient,
+  edgeConfigItemKey: "ITEM_KEY_FROM_INSTALLATION", // something like "statsig-5FSfBpWM9kUPqeKRlZPkod"
+})
 ```
 
 6. When initializing the `statsig` sdk, add the adapter to options
