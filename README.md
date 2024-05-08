@@ -33,8 +33,8 @@ const edgeConfigClient = createClient(process.env.EDGE_CONFIG);
 const dataAdapter = new EdgeConfigDataAdapter("KEY_FROM_INSTALLATION");
 ```
 
-6. When initializing the `statsig` sdk, add the adapter to options
+6. When initializing the `statsig` sdk, add the adapter to options, along with the initStrategyForIDLists and disableIdListsSync options to avoid a blocking network call for ID Lists. However, if you are using Statsig ID lists for evaluation, you'll need to omit those options and incur a network request to grab ID lists. 
 
 ```js
-await statsig.initialize("server-secret-key", { dataAdapter: dataAdapter });
+await statsig.initialize("server-secret-key", { dataAdapter: dataAdapter, initStrategyForIDLists: 'none', disableIdListsSync: true, });
 ```
