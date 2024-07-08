@@ -43,10 +43,15 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
     }
 
     const data = await this.edgeConfigClient.get(this.edgeConfigItemKey);
-    if (data === undefined) {
+    if (data == null) {
       return { error: new Error(`key (${key}) does not exist`) };
     }
-    return { result: JSON.stringify(data) };
+    if (typeof data !== "object") {
+      return {
+        error: new Error(`Edge Config value expected to be an object or array`),
+      };
+    }
+    return { result: data };
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
