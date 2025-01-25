@@ -36,7 +36,7 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async get(key: string): Promise<AdapterResponse> {
-    if (key !== "statsig.cache") {
+    if (!this.isConfgSpecKey(key)) {
       return {
         error: new Error(`Edge Config Adapter Only Supports Config Specs`),
       };
@@ -75,9 +75,14 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
   public async shutdown(): Promise<void> {}
 
   public supportsPollingUpdatesFor(key: string): boolean {
-    if (key === "statsig.cache") {
+    if (this.isConfgSpecKey(key)) {
       return this.supportConfigSpecPolling;
     }
     return false;
+  }
+
+  private isConfgSpecKey(key: string): boolean {
+    const v2CacheKeyPattern = /^statsig\|\/v[12]\/download_config_specs\|.+\|.+/;
+    return key === "statsig.cache" || v2CacheKeyPattern.test(key);
   }
 }

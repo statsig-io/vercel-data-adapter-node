@@ -11,7 +11,7 @@ describe("Validate edge config adapter functionality", () => {
 
   beforeEach(async () => {
     fetchMock.enableMocks();
-    fetchMock.mockResponse('"test123"');
+    fetchMock.mockResponse('{"a":1}');
     await dataAdapter.initialize();
   });
 
@@ -21,9 +21,16 @@ describe("Validate edge config adapter functionality", () => {
 
   test("Simple get", async () => {
     const { result: gates } = await dataAdapter.get("statsig.cache");
-    if (gates == null) {
-      return;
-    }
-    expect(gates).toEqual('"test123"');
+    expect(gates).toEqual({a: 1});
+  });
+  
+  test('Simple get v2 key', async () => {
+    const { result: gates }  = await dataAdapter.get("statsig|/v1/download_config_specs|plain_text|1234");
+    expect(gates).toEqual({a: 1});
+  });
+
+  test('Simple get v2 key with dcs v2', async () => {
+    const { result: gates }  = await dataAdapter.get("statsig|/v2/download_config_specs|plain_text|1234");
+    expect(gates).toEqual({a: 1});
   });
 });
