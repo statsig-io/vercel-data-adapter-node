@@ -1,4 +1,4 @@
-import { AdapterResponse, IDataAdapter } from "statsig-node";
+import { AdapterResponse, IDataAdapter } from "statsig-node-lite";
 import type { EdgeConfigClient } from "@vercel/edge-config";
 
 export class EdgeConfigDataAdapter implements IDataAdapter {
@@ -82,7 +82,8 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
   }
 
   private isConfgSpecKey(key: string): boolean {
-    const v2CacheKeyPattern = /^statsig\|\/v[12]\/download_config_specs\|.+\|.+/;
+    const v2CacheKeyPattern =
+      /^statsig\|\/v[12]\/download_config_specs\|.+\|.+/;
     return key === "statsig.cache" || v2CacheKeyPattern.test(key);
   }
 }
