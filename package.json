@@ -11,6 +11,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "homepage": "https://github.com/statsig-io/vercel-data-adapter-node",
+  "repository": {
+    "type": "git",
+    "url": "github:statsig-io/vercel-data-adapter-node"
+  },
   "dependencies": {
     "statsig-node-lite": "^0.4.2"
   },
