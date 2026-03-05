@@ -10,7 +10,8 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
    * A fully configured Edge Config client
    */
   private edgeConfigClient: EdgeConfigClient;
-  private supportConfigSpecPolling: boolean = false;
+  private edgeConfigIsHydrated: boolean = false;
+  private useEdgeConfigForPollingForUpdates: boolean;
 
   public constructor(options: {
     /**
@@ -29,9 +30,14 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
      * ```
      */
     edgeConfigClient: EdgeConfigClient;
+    /**
+     * Whether to opt out of polling updates from Edge Config.
+     */
+    useEdgeConfigForPollingForUpdates?: boolean;
   }) {
     this.edgeConfigItemKey = options.edgeConfigItemKey;
     this.edgeConfigClient = options.edgeConfigClient;
+    this.useEdgeConfigForPollingForUpdates = options.useEdgeConfigForPollingForUpdates ?? true;
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -51,6 +57,7 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
         error: new Error(`Edge Config value expected to be an object or array`),
       };
     }
+    this.edgeConfigIsHydrated = true;
     return { result: data };
   }
 
@@ -67,7 +74,7 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
     const data = await this.edgeConfigClient.get(this.edgeConfigItemKey);
 
     if (data) {
-      this.supportConfigSpecPolling = true;
+      this.edgeConfigIsHydrated = true;
     }
   }
 
@@ -75,8 +82,8 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
   public async shutdown(): Promise<void> {}
 
   public supportsPollingUpdatesFor(key: string): boolean {
-    if (this.isConfgSpecKey(key)) {
-      return this.supportConfigSpecPolling;
+    if (this.isConfgSpecKey(key) && this.useEdgeConfigForPollingForUpdates) {
+      return this.edgeConfigIsHydrated;
     }
     return false;
   }
