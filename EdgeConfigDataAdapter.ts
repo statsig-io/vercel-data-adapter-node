@@ -91,6 +91,11 @@ export class EdgeConfigDataAdapter implements IDataAdapter {
   private isConfgSpecKey(key: string): boolean {
     const v2CacheKeyPattern =
       /^statsig\|\/v[12]\/download_config_specs\|.+\|.+/;
-    return key === "statsig.cache" || v2CacheKeyPattern.test(key);
+    return (
+      key === "statsig.cache" ||
+      key === '/v1/download_config_specs' ||
+      key === '/v2/download_config_specs' ||
+      v2CacheKeyPattern.test(key)
+    );
   }
 }
